@@ -1,4 +1,4 @@
-package com.github.rmannibucau.comparator.iterator;
+package com.github.rmannibucau.comparator.validator;
 
 import java.util.ArrayList;
 import java.util.Collections;
