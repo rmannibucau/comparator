@@ -9,11 +9,11 @@ public class Line {
 		this.content = value;
 	}
 
-	public int number() {
+	public int getNumber() {
 		return number;
 	}
 
-	public String content() {
+	public String getContent() {
 		return content;
 	}
 }

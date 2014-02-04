@@ -28,8 +28,8 @@ public class FileLineIteratorTest {
 		for (int i = 1; i <= 3; i++) {
 			assertTrue(it.hasNext());
 			final Line next = it.next();
-			assertEquals("l" + i, next.content());
-			assertEquals(i, next.number());
+			assertEquals("l" + i, next.getContent());
+			assertEquals(i, next.getNumber());
 		}
 		assertFalse(it.hasNext());
 	}
