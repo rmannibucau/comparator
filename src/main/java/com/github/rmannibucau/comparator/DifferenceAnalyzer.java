@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class DifferenceAnalyzer<T> {
+public class DifferenceAnalyzer {
     /**
      * NOTE: newStream and existingStream should be sorted using the same order.
      *
