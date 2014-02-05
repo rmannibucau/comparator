@@ -35,27 +35,29 @@ public class DifferenceAnalyzer {
 
                     int diff = keyComparator.compare(existingData, newData);
 
-                    while (diff < 0) {
-                        missing.add(existingData);
-                        if (existingStream.hasNext()) {
-                            existingData = existingStream.next();
-                            diff = keyComparator.compare(existingData, newData);
-                        } else {
-                            added.add(newData);
-                            break;
-                        }
-                    }
-
-                    while (diff > 0) {
-                        added.add(newData);
-                        if (newStream.hasNext()) {
-                            newData = newStream.next();
-                            diff = keyComparator.compare(existingData, newData);
-                        } else {
+                    do {
+                        while (diff < 0) {
                             missing.add(existingData);
-                            break;
+                            if (existingStream.hasNext()) {
+                                existingData = existingStream.next();
+                                diff = keyComparator.compare(existingData, newData);
+                            } else {
+                                added.add(newData);
+                                break;
+                            }
                         }
-                    }
+
+                        while (diff > 0) {
+                            added.add(newData);
+                            if (newStream.hasNext()) {
+                                newData = newStream.next();
+                                diff = keyComparator.compare(existingData, newData);
+                            } else {
+                                missing.add(existingData);
+                                break;
+                            }
+                        }
+                    } while (diff < 0);
 
                     if (diff == 0) {
                         if (comparator.compare(existingData, newData) != 0) {
