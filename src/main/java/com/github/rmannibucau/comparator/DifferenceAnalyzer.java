@@ -57,7 +57,7 @@ public class DifferenceAnalyzer {
                                 break;
                             }
                         }
-                    } while (diff < 0);
+					} while (diff < 0 && existingStream.hasNext() && newStream.hasNext());
 
                     if (diff == 0) {
                         if (comparator.compare(existingData, newData) != 0) {
