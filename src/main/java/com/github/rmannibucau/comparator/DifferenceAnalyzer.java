@@ -52,6 +52,9 @@ public class DifferenceAnalyzer {
                             if (newStream.hasNext()) {
                                 newData = newStream.next();
                                 diff = keyComparator.compare(existingData, newData);
+                                if (diff < 0 && !existingStream.hasNext()) {
+									added.add(newData);
+								}
                             } else {
                                 missing.add(existingData);
                                 break;
