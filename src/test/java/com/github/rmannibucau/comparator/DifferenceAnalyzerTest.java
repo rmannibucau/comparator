@@ -130,6 +130,14 @@ public class DifferenceAnalyzerTest {
             this.id = id;
             this.name = name;
         }
+
+        @Override
+        public String toString() {
+            return "Person{" +
+                    "id=" + id +
+                    ", name='" + name + '\'' +
+                    '}';
+        }
     }
 
     public static class KeyComparator implements Comparator<Person> {

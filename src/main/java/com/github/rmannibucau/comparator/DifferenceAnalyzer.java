@@ -26,58 +26,58 @@ public class DifferenceAnalyzer {
         final Collection<T> added = new LinkedList<T>();
         final Collection<T> updated = new LinkedList<T>();
 
+        T existingData = null;
+        T newData = null;
         try {
-            while (existingStream.hasNext()) {
-                T existingData = existingStream.next();
+            boolean oneMoreIteration = existingStream.hasNext() && newStream.hasNext();
 
-                if (newStream.hasNext()) {
-                    T newData = newStream.next();
+            if (oneMoreIteration) {
+                existingData = existingStream.next();
+                newData = newStream.next();
+            }
 
-                    int diff = keyComparator.compare(existingData, newData);
+            while (oneMoreIteration) {
+                oneMoreIteration = false;
 
-                    do {
-                        while (diff < 0) {
-                            missing.add(existingData);
-                            if (existingStream.hasNext()) {
-                                existingData = existingStream.next();
-                                diff = keyComparator.compare(existingData, newData);
-                            } else {
-                                added.add(newData);
-                                break;
-                            }
-                        }
-
-                        while (diff > 0) {
-                            added.add(newData);
-                            if (newStream.hasNext()) {
-                                newData = newStream.next();
-                                diff = keyComparator.compare(existingData, newData);
-                                if (diff < 0 && !existingStream.hasNext()) {
-									added.add(newData);
-								}
-                            } else {
-                                missing.add(existingData);
-                                break;
-                            }
-                        }
-                    } while (diff < 0 && existingStream.hasNext());
-
-                    if (diff == 0) {
-                        if (comparator.compare(existingData, newData) != 0) {
-                            updated.add(newData);
-                        } // else no diff
+                final int diff = keyComparator.compare(existingData, newData);
+                if (diff > 0) {
+                    added.add(newData);
+                    oneMoreIteration = newStream.hasNext();
+                    if (oneMoreIteration) {
+                        newData = newStream.next();
+                    } else {
+                        missing.add(existingData);
                     }
-                } else {
+                }
+                if (diff < 0) {
                     missing.add(existingData);
+                    oneMoreIteration = existingStream.hasNext();
+                    if (oneMoreIteration) {
+                        existingData = existingStream.next();
+                    } else {
+                        added.add(newData);
+                    }
+                }
+                if (diff == 0) {
+                    if (comparator.compare(existingData, newData) != 0) {
+                        updated.add(newData);
+                    } // else no diff
+                    oneMoreIteration = existingStream.hasNext() && newStream.hasNext();
+                    if (oneMoreIteration) {
+                        existingData = existingStream.next();
+                        newData = newStream.next();
+                    }
                 }
             }
             while (newStream.hasNext()) {
                 added.add(newStream.next());
             }
-        } catch (final RuntimeException exception) {
+            while (existingStream.hasNext()) {
+                missing.add(existingStream.next());
+            }
+        } finally {
             closeIfNeeded(newStream);
             closeIfNeeded(existingStream);
-            throw exception;
         }
 
         return new Difference<T>(missing, added, updated);
