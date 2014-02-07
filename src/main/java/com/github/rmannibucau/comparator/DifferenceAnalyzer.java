@@ -10,7 +10,7 @@ import java.util.LinkedList;
 
 public class DifferenceAnalyzer {
     /**
-     * NOTE: newStream and existingStream should be sorted using the same order.
+     * NOTE: newStream and existingStream should be sorted using the same order (see OrderValidatorIterator).
      *
      * @param newStream input data stream
      * @param existingStream current data stream

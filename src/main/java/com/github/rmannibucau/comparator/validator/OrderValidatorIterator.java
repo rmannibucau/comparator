@@ -1,9 +1,11 @@
 package com.github.rmannibucau.comparator.validator;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.Iterator;
 
-public class OrderValidatorIterator<T> implements Iterator<T> {
+public class OrderValidatorIterator<T> implements Iterator<T>, Closeable {
 	private final Iterator<T> delegate;
 	private final Comparator<T> orderComparator;
 	private final boolean acceptDuplicated;
@@ -47,7 +49,14 @@ public class OrderValidatorIterator<T> implements Iterator<T> {
 		delegate.remove();
 	}
 
-	public static class InvalidOrderException extends RuntimeException {
+    @Override
+    public void close() throws IOException {
+        if (Closeable.class.isInstance(delegate)) {
+            Closeable.class.cast(delegate).close();
+        }
+    }
+
+    public static class InvalidOrderException extends RuntimeException {
 		public InvalidOrderException(final String s) {
 			super(s);
 		}
